@@ -1,0 +1,21 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect x="50" y="50" width="300" height="200" rx="20" fill="#f0f9ff" />
+  
+  <!-- 식사 접시 -->
+  <circle cx="200" cy="150" r="80" fill="#ffffff" stroke="#0070f3" stroke-width="3" />
+  
+  <!-- 음식 아이템들 -->
+  <circle cx="170" cy="130" r="25" fill="#4ade80" /> <!-- 채소 -->
+  <circle cx="210" cy="120" r="20" fill="#fb923c" /> <!-- 당근 -->
+  <rect x="180" y="160" width="50" height="30" rx="5" fill="#fbbf24" /> <!-- 밥 -->
+  <rect x="150" y="170" width="40" height="20" rx="5" fill="#f87171" /> <!-- 고기 -->
+  
+  <!-- 포크와 나이프 -->
+  <rect x="250" y="110" width="5" height="60" rx="2" fill="#94a3b8" />
+  <rect x="260" y="110" width="5" height="60" rx="2" fill="#94a3b8" />
+  <rect x="250" y="100" width="15" height="10" rx="2" fill="#94a3b8" />
+  
+  <!-- 물잔 -->
+  <path d="M120 120 L130 180 L110 180 Z" fill="#bae6fd" stroke="#0070f3" stroke-width="2" />
+  <rect x="115" y="115" width="10" height="5" fill="#bae6fd" stroke="#0070f3" stroke-width="2" />
+</svg>
