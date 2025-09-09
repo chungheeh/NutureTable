@@ -10,7 +10,6 @@ export const StartPage = () => {
           alt="키움밥상 로고"
           className="mx-auto w-64 h-auto mb-6"
         />
-        <h1 className="mb-2 text-3xl font-bold text-[#0F9D58]">키움밥상</h1>
         <p className="text-lg text-neutral-600">건강한 식습관을 위한 첫걸음</p>
       </div>
       

@@ -28,7 +28,7 @@ export const SignUp = () => {
         <img
           src="/favicon.ico"
           alt="키움밥상 로고"
-          className="mx-auto w-32 h-auto mb-4"
+          className="mx-auto w-48 h-auto mb-6"
         />
         <p className="text-lg text-neutral-600">회원가입</p>
       </div>
