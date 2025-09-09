@@ -16,7 +16,11 @@ export const LoginPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-3xl font-bold text-primary-500">키움밥상</h1>
+        <img
+          src="/favicon.ico"
+          alt="키움밥상 로고"
+          className="mx-auto w-32 h-auto mb-4"
+        />
         <p className="text-lg text-neutral-600">로그인</p>
       </div>
       
