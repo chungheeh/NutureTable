@@ -1,124 +1,106 @@
-<<<<<<< HEAD:src/api/client.js
-import { createClient } from '@supabase/supabase-js';
+// 임시 목업 데이터
+const mockMeals = [
+  { id: '1', name: '아침', time: '08:00', food: '계란 토스트', calories: 350, date: '2025-09-12' },
+  { id: '2', name: '점심', time: '12:30', food: '닭가슴살 샐러드', calories: 450, date: '2025-09-12' },
+  { id: '3', name: '저녁', time: '19:00', food: '연어 스테이크', calories: 550, date: '2025-09-12' },
+];
 
-// Supabase 클라이언트 설정
-// 실제 프로젝트에서는 환경 변수를 사용하세요
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+const mockNutrition = [
+  { id: '1', user_id: 'user1', date: '2025-09-12', calories: 1350, protein: 120, carbs: 150, fat: 45 },
+  { id: '2', user_id: 'user1', date: '2025-09-11', calories: 1450, protein: 130, carbs: 140, fat: 50 },
+];
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const mockStores = [
+  { id: '1', name: '건강식품 마트', address: '서울시 강남구', rating: 4.5 },
+  { id: '2', name: '유기농 식품점', address: '서울시 마포구', rating: 4.8 },
+];
+
+const mockUser = {
+  id: 'user1',
+  email: 'user@example.com',
+  name: '홍길동',
+};
+
+// 비동기 응답을 시뮬레이션하는 함수
+const asyncResponse = (data, error = null, delay = 300) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (error) {
+        resolve({ data: null, error });
+      } else {
+        resolve({ data, error: null });
+      }
+    }, delay);
+  });
+};
 
 // API 요청 함수들
 export const api = {
   // 인증 관련
   auth: {
     login: async (email, password) => {
-      return supabase.auth.signInWithPassword({ email, password });
+      if (email === 'user@example.com' && password === 'password') {
+        return asyncResponse({ user: mockUser, session: { token: 'mock-token' } });
+      }
+      return asyncResponse(null, '이메일 또는 비밀번호가 잘못되었습니다.');
     },
     register: async (email, password) => {
-      return supabase.auth.signUp({ email, password });
+      return asyncResponse({ user: { ...mockUser, email }, session: { token: 'mock-token' } });
     },
     logout: async () => {
-      return supabase.auth.signOut();
+      return asyncResponse({});
     },
     getUser: async () => {
-      return supabase.auth.getUser();
+      return asyncResponse({ user: mockUser });
     },
   },
   
   // 식사 관련
   meals: {
     getMeals: async () => {
-      return supabase.from('meals').select('*');
+      return asyncResponse(mockMeals);
     },
     addMeal: async (meal) => {
-      return supabase.from('meals').insert(meal);
+      const newMeal = { ...meal, id: String(Date.now()) };
+      mockMeals.push(newMeal);
+      return asyncResponse({ id: newMeal.id });
     },
     updateMeal: async (id, meal) => {
-      return supabase.from('meals').update(meal).eq('id', id);
+      const index = mockMeals.findIndex(m => m.id === id);
+      if (index !== -1) {
+        mockMeals[index] = { ...mockMeals[index], ...meal };
+        return asyncResponse(mockMeals[index]);
+      }
+      return asyncResponse(null, '식사를 찾을 수 없습니다.');
     },
     deleteMeal: async (id) => {
-      return supabase.from('meals').delete().eq('id', id);
+      const index = mockMeals.findIndex(m => m.id === id);
+      if (index !== -1) {
+        mockMeals.splice(index, 1);
+        return asyncResponse({});
+      }
+      return asyncResponse(null, '식사를 찾을 수 없습니다.');
     },
   },
   
   // 영양 정보 관련
   nutrition: {
     getNutritionData: async (userId) => {
-      return supabase.from('nutrition').select('*').eq('user_id', userId);
+      return asyncResponse(mockNutrition.filter(n => n.user_id === userId));
     },
   },
   
   // 상점 관련
   stores: {
     getStores: async () => {
-      return supabase.from('stores').select('*');
+      return asyncResponse(mockStores);
     },
     getStoreById: async (id) => {
-      return supabase.from('stores').select('*').eq('id', id).single();
+      const store = mockStores.find(s => s.id === id);
+      if (store) {
+        return asyncResponse(store);
+      }
+      return asyncResponse(null, '상점을 찾을 수 없습니다.');
     },
   },
 };
-=======
-import { createClient } from '@supabase/supabase-js';
-
-// Supabase 클라이언트 설정
-// 실제 프로젝트에서는 환경 변수를 사용하세요
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
-
-// API 요청 함수들
-export const api = {
-  // 인증 관련
-  auth: {
-    login: async (email: string, password: string) => {
-      return supabase.auth.signInWithPassword({ email, password });
-    },
-    register: async (email: string, password: string) => {
-      return supabase.auth.signUp({ email, password });
-    },
-    logout: async () => {
-      return supabase.auth.signOut();
-    },
-    getUser: async () => {
-      return supabase.auth.getUser();
-    },
-  },
-  
-  // 식사 관련
-  meals: {
-    getMeals: async () => {
-      return supabase.from('meals').select('*');
-    },
-    addMeal: async (meal: any) => {
-      return supabase.from('meals').insert(meal);
-    },
-    updateMeal: async (id: string, meal: any) => {
-      return supabase.from('meals').update(meal).eq('id', id);
-    },
-    deleteMeal: async (id: string) => {
-      return supabase.from('meals').delete().eq('id', id);
-    },
-  },
-  
-  // 영양 정보 관련
-  nutrition: {
-    getNutritionData: async (userId: string) => {
-      return supabase.from('nutrition').select('*').eq('user_id', userId);
-    },
-  },
-  
-  // 상점 관련
-  stores: {
-    getStores: async () => {
-      return supabase.from('stores').select('*');
-    },
-    getStoreById: async (id: string) => {
-      return supabase.from('stores').select('*').eq('id', id).single();
-    },
-  },
-};
-
->>>>>>> 2ffbfae (Initial commit: NutureTable project setup):src/api/client.ts
