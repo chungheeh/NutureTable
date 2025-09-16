@@ -108,7 +108,7 @@ export const MealPeriodCard: React.FC<MealPeriodCardProps> = ({
                     meal={meal} 
                     accentColor={accentColor.replace('border-', 'text-')}
                     onDelete={() => onDeleteMeal(meal)}
-                    onEdit={onEditMeal}
+                    onEdit={(meal) => onEditMeal(meal)}
                   />
                 </div>
               ))}

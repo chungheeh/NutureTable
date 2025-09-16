@@ -16,20 +16,12 @@ export const StartPage: React.FC = () => {
           우리 아이 <span className="text-primary-500">건강한 식습관</span>
         </h1>
         <p className="text-neutral-600 text-center mb-12 text-base">
-          우리 아이의 건강한 성장을 위한<br />
-          똑똑한 식단 관리를 시작하세요
+          이 앱은 아동복지카드 사용자를 위한 앱입니다.<br />
+          우리 아이의 건강한 성장을 위해 식단 관리를 시작하세요
         </p>
-        <div className="w-full max-w-sm space-y-3">
+        <div className="w-full max-w-sm">
           <Button
             className="w-full"
-            size="lg"
-            onClick={() => navigate('/signup')}
-          >
-            회원가입
-          </Button>
-          <Button
-            className="w-full"
-            variant="outline"
             size="lg"
             onClick={() => navigate('/login')}
           >

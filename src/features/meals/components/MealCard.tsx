@@ -1,172 +1,5 @@
 import React, { useState } from 'react';
-
-export type Meal = {
-  id: string;
-  name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  time: string;
-  sodium?: number;
-  cholesterol?: number;
-  saturatedFat?: number;
-  transFat?: number;
-};
-
-type MealCardProps = {
-  meal: Meal;
-  accentColor: string;
-  onDelete: () => void;
-  onEdit: (meal: Meal) => void;
-};
-
-export const MealCard: React.FC<MealCardProps> = ({ 
-  meal, 
-  accentColor, 
-  onDelete,
-  onEdit 
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete();
-  };
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit(meal);
-  };
-
-  return (
-    <div 
-      className="border-b border-gray-200 last:border-b-0"
-      onClick={() => setIsExpanded(!isExpanded)}
-    >
-      <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 transition-colors px-2">
-        <div className="flex items-center gap-3">
-          <span className={`text-sm ${accentColor}`}>{meal.time}</span>
-          <h3 className="font-medium text-gray-900">{meal.name}</h3>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-900">{meal.calories}kcal</span>
-          <button
-            onClick={handleEdit}
-            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
-            title="식사 정보 수정"
-          >
-            <svg 
-              className={`w-4 h-4 ${accentColor}`}
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" 
-              />
-            </svg>
-          </button>
-          <button
-            onClick={handleDelete}
-            className="p-1.5 hover:bg-red-50 rounded-full transition-colors"
-            title="식사 기록 삭제"
-          >
-            <svg 
-              className="w-4 h-4 text-red-500" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-          <svg 
-            className={`w-5 h-5 text-gray-500 transition-transform duration-500 ease-in-out ${
-              isExpanded ? 'transform rotate-180' : ''
-            }`}
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      </div>
-      
-      {isExpanded && (
-        <div className="pb-4 px-4 bg-white">
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            {/* 영양정보 헤더 */}
-            <div className="bg-black text-white p-3">
-              <div className="text-sm">영양정보</div>
-              <div className="flex justify-between items-baseline mt-1">
-                <div>1회 제공량당</div>
-                <div className="text-lg font-bold">{meal.calories}kcal</div>
-              </div>
-            </div>
-
-            {/* 영양성분 테이블 */}
-            <div className="divide-y divide-gray-200">
-              <NutrientRow 
-                label="탄수화물" 
-                amount={`${meal.carbs}g`} 
-                percentage="4%"
-              />
-              <NutrientRow 
-                label="단백질" 
-                amount={`${meal.protein}g`}
-                percentage="4%" 
-              />
-              <NutrientRow 
-                label="지방" 
-                amount={`${meal.fat}g`}
-                percentage="5%" 
-              />
-              {meal.saturatedFat !== undefined && (
-                <NutrientRow 
-                  label="포화지방" 
-                  amount={`${meal.saturatedFat}g`}
-                  percentage="5%"
-                  indent
-                />
-              )}
-              {meal.transFat !== undefined && (
-                <NutrientRow 
-                  label="트랜스지방" 
-                  amount={`${meal.transFat}g`}
-                  indent
-                />
-              )}
-              {meal.cholesterol !== undefined && (
-                <NutrientRow 
-                  label="콜레스테롤" 
-                  amount={`${meal.cholesterol}mg`}
-                  percentage="1%"
-                />
-              )}
-              {meal.sodium !== undefined && (
-                <NutrientRow 
-                  label="나트륨" 
-                  amount={`${meal.sodium}mg`}
-                  percentage="4%"
-                />
-              )}
-            </div>
-
-            {/* 기준치 설명 */}
-            <div className="p-3 text-xs text-gray-500 border-t border-gray-200">
-              * 1일 영양성분 기준치에 대한 비율(%)은 2,000kcal 기준이므로 개인의 필요 열량에 따라 다를 수 있습니다.
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+import { motion, AnimatePresence } from 'framer-motion';
 
 type NutrientRowProps = {
   label: string;
@@ -191,3 +24,225 @@ const NutrientRow: React.FC<NutrientRowProps> = ({
     </div>
   </div>
 );
+
+export type Meal = {
+  id: string;
+  name: string;
+  time: string;
+  amount: number;
+  imageUrl?: string;
+  foodId?: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  sodium?: number;
+  cholesterol?: number;
+  saturatedFat?: number;
+  transFat?: number;
+};
+
+type MealCardProps = {
+  meal: Meal;
+  accentColor: string;
+  onDelete: () => void;
+  onEdit: (meal: Meal) => void;
+};
+
+export const MealCard: React.FC<MealCardProps> = ({ 
+  meal, 
+  accentColor, 
+  onDelete,
+  onEdit 
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleDelete = () => {
+    onDelete();
+  };
+
+  const handleEdit = () => {
+    onEdit(meal);
+  };
+
+  return (
+    <motion.div 
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="border-b border-gray-200 last:border-b-0"
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      <div 
+        className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 transition-colors px-2"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 flex items-center justify-center">
+            {meal.imageUrl ? (
+              <img 
+                src={meal.imageUrl} 
+                alt={meal.name}
+                className="w-12 h-12 rounded-md object-cover"
+              />
+            ) : (
+              <motion.svg
+                className="w-8 h-8 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <motion.path
+                  d="M3 5h2v14h-2zM7 5h2v14h-2zM15 5c0 0 4 0 4 4s-3 4-3 4v6h-2V5h1z"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                />
+              </motion.svg>
+            )}
+          </div>
+          <div>
+            <span className={`text-sm ${accentColor} block`}>{meal.time}</span>
+            <h3 className="font-medium text-gray-900">{meal.name}</h3>
+            <span className="text-sm text-gray-500">{meal.amount}g · {meal.calories}kcal</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit();
+            }}
+            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            title="식사 정보 수정"
+          >
+            <svg 
+              className={`w-4 h-4 ${accentColor}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5}
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+              />
+            </svg>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+            className="p-1.5 hover:bg-red-50 rounded-full transition-colors"
+            title="식사 기록 삭제"
+          >
+            <svg 
+              className="w-4 h-4 text-red-500" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5} 
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <svg 
+            className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${
+              isExpanded ? 'transform rotate-180' : ''
+            }`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={1.5} 
+              d="M8.25 15.75l7.5-7.5 7.5 7.5"
+              className="transition-opacity duration-300"
+            />
+          </svg>
+        </div>
+      </div>
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="pb-4 px-4 bg-white overflow-hidden"
+          >
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="bg-black text-white p-3">
+                <div className="text-sm">영양정보</div>
+                <div className="flex justify-between items-baseline mt-1">
+                  <div>1회 제공량 {meal.amount}g</div>
+                  <div>{meal.calories}kcal</div>
+                </div>
+              </div>
+              <div className="divide-y divide-gray-200">
+                <NutrientRow 
+                  label="탄수화물" 
+                  amount={`${meal.carbs}g`} 
+                  percentage={Math.round((meal.carbs * 4) / 2000 * 100) + '%'}
+                />
+                <NutrientRow 
+                  label="단백질" 
+                  amount={`${meal.protein}g`}
+                  percentage={Math.round((meal.protein * 4) / 2000 * 100) + '%'}
+                />
+                <NutrientRow 
+                  label="지방" 
+                  amount={`${meal.fat}g`}
+                  percentage={Math.round((meal.fat * 9) / 2000 * 100) + '%'}
+                />
+                {meal.saturatedFat !== undefined && (
+                  <NutrientRow 
+                    label="포화지방" 
+                    amount={`${meal.saturatedFat}g`}
+                    percentage={Math.round((meal.saturatedFat * 9) / 2000 * 100) + '%'}
+                    indent
+                  />
+                )}
+                {meal.transFat !== undefined && (
+                  <NutrientRow 
+                    label="트랜스지방" 
+                    amount={`${meal.transFat}g`}
+                    indent
+                  />
+                )}
+                {meal.cholesterol !== undefined && (
+                  <NutrientRow 
+                    label="콜레스테롤" 
+                    amount={`${meal.cholesterol}mg`}
+                    percentage={Math.round(meal.cholesterol / 300 * 100) + '%'}
+                  />
+                )}
+                {meal.sodium !== undefined && (
+                  <NutrientRow 
+                    label="나트륨" 
+                    amount={`${meal.sodium}mg`}
+                    percentage={Math.round(meal.sodium / 2000 * 100) + '%'}
+                  />
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};

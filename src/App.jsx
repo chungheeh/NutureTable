@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AddMealModal } from './features/meals/components/AddMealModal';
 
 // 페이지 컴포넌트 import
 import { StartPage } from './pages/Start';
 import { DashboardPage } from './pages/Dashboard';
 import { LoginPage } from './pages/Login';
-import { SignUp } from './pages/SignUp';
-import { StatisticsPage } from './pages/Statistics';
+import { NutritionAnalysisPage } from './pages/NutritionAnalysis';
+import { CalendarPage } from './pages/Calendar';
+import AdditionalInfoPage from './pages/AdditionalInfo';
 
 // 페이지 컴포넌트 import
 import { MyPage } from './pages/MyPage';
 import { SettingsPage } from './pages/Settings';
 
-import Meals from './pages/Meals';
+import { MealsPage } from './pages/Meals';
 
 // 아직 구현되지 않은 페이지 컴포넌트
 const StoresPage = () => <div className="p-8 text-center">상점</div>;
 
-// 네비게이션 아이템 타입 정의
-type NavItem = {
-  path: string;
-  label: string;
-  icon: React.ReactNode;
-};
+// 네비게이션 아이템 정의
 
 // 레이아웃 컴포넌트
 const Layout = ({ children }) => {
@@ -32,7 +29,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   
   // 네비게이션 아이템 정의
-  const navItems: NavItem[] = [
+  const navItems = [
     {
       path: '/home',
       label: '홈',
@@ -44,7 +41,7 @@ const Layout = ({ children }) => {
     },
     {
       path: '/stats',
-      label: '통계',
+      label: '영양분석',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -55,8 +52,8 @@ const Layout = ({ children }) => {
       path: '/meals',
       label: '식사',
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 5h2v14h-2zM7 5h2v14h-2zM15 5c0 0 4 0 4 4s-3 4-3 4v6h-2V5h1z" />
         </svg>
       )
     },
@@ -79,11 +76,11 @@ const Layout = ({ children }) => {
           <span className="text-lg font-bold text-neutral-900">키움밥상</span>
         </div>
         <div className="flex items-center gap-1">
-          <button className="p-2 text-neutral-600 active:text-primary-500">
+          <Link to="/calendar" className="p-2 text-neutral-600 active:text-primary-500">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-          </button>
+          </Link>
           <a href="/settings" className="p-2 text-neutral-600 active:text-primary-500">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -166,19 +163,22 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
+      <GoogleOAuthProvider clientId="748625038020-uhmonn17q232nvqgqo2rmn7vdnh8ak4b.apps.googleusercontent.com">
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<StartPage />} />
           <Route path="/home" element={<Layout><DashboardPage /></Layout>} />
-          <Route path="/meals" element={<Layout><Meals /></Layout>} />
-          <Route path="/stats" element={<Layout><StatisticsPage /></Layout>} />
+          <Route path="/meals" element={<Layout><MealsPage /></Layout>} />
+          <Route path="/stats" element={<Layout><NutritionAnalysisPage /></Layout>} />
+          <Route path="/calendar" element={<Layout><CalendarPage /></Layout>} />
           <Route path="/stores" element={<Layout><StoresPage /></Layout>} />
           <Route path="/mypage" element={<Layout><MyPage /></Layout>} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUp />} />
           <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+          <Route path="/additional-info" element={<AdditionalInfoPage />} />
         </Routes>
       </BrowserRouter>
+      </GoogleOAuthProvider>
     </QueryClientProvider>
   );
 }

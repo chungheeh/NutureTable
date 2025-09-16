@@ -3,10 +3,11 @@ import { Meal } from '../components/MealCard';
 
 // 임시 데이터 - 나중에 API 연동으로 대체
 const MOCK_MEALS: Record<string, Meal[]> = {
-  today: [
+  '2025-09-15': [
     {
       id: '1',
       name: '닭가슴살 샐러드',
+      amount: 200,
       calories: 350,
       protein: 40,
       carbs: 10,
@@ -20,6 +21,7 @@ const MOCK_MEALS: Record<string, Meal[]> = {
     {
       id: '2',
       name: '현미밥과 불고기',
+      amount: 400,
       calories: 650,
       protein: 35,
       carbs: 85,
@@ -31,10 +33,11 @@ const MOCK_MEALS: Record<string, Meal[]> = {
       transFat: 0
     }
   ],
-  yesterday: [
+  '2025-09-14': [
     {
       id: '3',
       name: '연어스테이크',
+      amount: 180,
       calories: 450,
       protein: 45,
       carbs: 5,
@@ -46,10 +49,11 @@ const MOCK_MEALS: Record<string, Meal[]> = {
       transFat: 0
     }
   ],
-  lastWeek: [
+  '2025-09-08': [
     {
       id: '4',
       name: '오트밀',
+      amount: 150,
       calories: 280,
       protein: 12,
       carbs: 48,
@@ -66,23 +70,41 @@ const MOCK_MEALS: Record<string, Meal[]> = {
 export const useMeals = () => {
   const [meals, setMeals] = useState<Record<string, Meal[]>>(MOCK_MEALS);
 
-  const deleteMeal = (period: string, mealId: string) => {
+  const getMealsByDate = (date: Date) => {
+    const dateString = date.toISOString().split('T')[0];
+    return (meals[dateString] || []).sort((a, b) => a.time.localeCompare(b.time));
+  };
+
+  const deleteMeal = (date: Date, mealId: string) => {
+    const dateString = date.toISOString().split('T')[0];
     setMeals(prev => ({
       ...prev,
-      [period]: prev[period].filter(meal => meal.id !== mealId)
+      [dateString]: (prev[dateString] || []).filter(meal => meal.id !== mealId)
     }));
   };
 
-  const mealsByPeriod = useMemo(() => {
-    return {
-      today: meals.today.sort((a, b) => a.time.localeCompare(b.time)),
-      yesterday: meals.yesterday.sort((a, b) => a.time.localeCompare(b.time)),
-      lastWeek: meals.lastWeek.sort((a, b) => a.time.localeCompare(b.time))
-    };
-  }, [meals]);
+  const updateMeal = (date: Date, mealId: string, updatedMeal: Meal) => {
+    const dateString = date.toISOString().split('T')[0];
+    setMeals(prev => ({
+      ...prev,
+      [dateString]: (prev[dateString] || []).map(meal => 
+        meal.id === mealId ? { ...meal, ...updatedMeal } : meal
+      )
+    }));
+  };
+
+  const addMeal = (date: Date, meal: Meal) => {
+    const dateString = date.toISOString().split('T')[0];
+    setMeals(prev => ({
+      ...prev,
+      [dateString]: [...(prev[dateString] || []), meal]
+    }));
+  };
 
   return {
-    ...mealsByPeriod,
-    deleteMeal
+    getMealsByDate,
+    deleteMeal,
+    updateMeal,
+    addMeal
   };
 };

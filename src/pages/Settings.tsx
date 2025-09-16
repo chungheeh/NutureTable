@@ -1,7 +1,5 @@
 import React from 'react';
 import { FAQ } from '../features/mypage/components/FAQ';
-import { NotificationSettings } from '../features/mypage/components/NotificationSettings';
-import { InquiryForm } from '../features/mypage/components/InquiryForm';
 
 export const SettingsPage: React.FC = () => {
   return (
@@ -9,9 +7,7 @@ export const SettingsPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">설정</h1>
       
       <div className="space-y-6">
-        <NotificationSettings />
         <FAQ />
-        <InquiryForm />
       </div>
     </div>
   );
